@@ -181,6 +181,12 @@ dataset <- as_tibble(dataset)
   #Ratings
 dataset2 <- rename(dataset, q2.rating = Q67, q3.rating = Q71, q4.rating = Q70, q5.rating  = Q68, 
                    q6.rating = Q73, q7.rating = Q76)
+ 
+  #Choice
+
+dataset2 <- rename(dataset2, q1.choice = Q59, q2.choice = Q61, q3.choice = Q62, q4.choice = Q64, q5.choice = Q65,
+                   q6.choice = Q72, q7.choice = Q75)
+
   #Controls
 
 dataset2 <- rename(dataset2, gender = Q2, age = Q3, hispanic = Q4, race = Q5, income = Q6, ideology = Q7, work.status = Q15,
@@ -188,6 +194,36 @@ dataset2 <- rename(dataset2, gender = Q2, age = Q3, hispanic = Q4, race = Q5, in
                   activities.protest = Q38_1, activities.contact.official = Q38_2, activities.volunteer = Q38_3,
                   activities.donate = Q38_4, activities.comment.online = Q38_5, activities.held.office = Q38_6, voted.2018 = Q14, influence.on.politics = Q18)
 
+  #Emotions
+
+dataset2 <- rename(dataset2, emotion.anger = Q16_1, emotion.disgust = Q16_2, emotion.outrage = Q16_3, emotion.fear = Q16_4,
+                   emotion.nervous = Q16_5, emotion.hopeful = Q16_6, emotion.proud = Q16_7, emotion.happy = Q16_8)
+
+ #Morality
+
+dataset2 <- rename(dataset2, vignette.impression = Q22, core.conviction = Q23_1, right.wrong = Q23_2)
+
+ #Group efficacy
+
+dataset2 <- rename(dataset2, dem.change.together = Q25_1, dem.improve.fairness = Q25_2, dem.stand.up = Q25_3, dem.influence.govt = Q25_4)
+dataset2 <- rename(dataset2, rep.change.together = Q51_1, rep.improve.fairness = Q51_2, rep.stand.up = Q51_3, rep.influence.govt = Q51_4)
+
+ #Group identity
+
+dataset2 <- rename(dataset2, dem.important = Q26, dem.describe = Q29, dem.we = Q27, dem.self = Q28)
+dataset2 <- rename(dataset2, rep.important = Q30, rep.describe = Q31, rep.we = Q32, rep.self = Q33)
+
+
+ #Manipulation checks
+
+dataset2 <- rename(dataset2, vignette.recall = Q35, dem.demonstration = Q45_1, dem.voice = Q45_2,
+                   dem.with.copartisans = Q45_3, dem.petition = Q45_4, dem.donate.party = Q45_5, dem.donate.ngo = Q45_6,
+                   dem.volunteer.ngo = Q45_7, 
+                   rep.demonstration = Q46_1, rep.voice = Q46_2,
+                   rep.with.copartisans = Q46_3, rep.petition = Q46_4, rep.donate.party = Q46_5, rep.donate.ngo = Q46_6,
+                   rep.volunteer.ngo = Q46_7)
+
+write.csv(dataset2, "~/Research projects/manipulation_psych_2019/dataset_updated.csv")
 #####
  
   
