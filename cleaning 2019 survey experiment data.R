@@ -223,7 +223,9 @@ dataset2 <- rename(dataset2, vignette.recall = Q35, dem.demonstration = Q45_1, d
                    rep.with.copartisans = Q46_3, rep.petition = Q46_4, rep.donate.party = Q46_5, rep.donate.ngo = Q46_6,
                    rep.volunteer.ngo = Q46_7)
 
+
 write.csv(dataset2, "~/Research projects/manipulation_psych_2019/dataset_updated.csv")
+
 #####
  
   
