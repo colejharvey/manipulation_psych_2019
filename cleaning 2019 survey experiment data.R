@@ -2,10 +2,10 @@
 ###Cole Harvey
 ###April 25, 2019
 rm(list=ls())
+library(tidyverse)
 
 
-
-dataset <- read.csv("C:/Users/Cole/Dropbox/Attitudes and emotions/POLI 100 experiment 2019/Dataset_Manipulation and social psychology_ PS subject pool 2019_April 25, 2019.csv")
+dataset <- read.csv("Dataset_Manipulation and social psychology_ PS subject pool 2019_April 25, 2019.csv")
 
 ###Q1
 
@@ -172,11 +172,26 @@ dataset$q6.electionB <- ifelse(dataset$Q72 == "Election B", 1, 0)
 dataset$q7.electionA <- ifelse(dataset$Q75 == "Election A", 1, 0)
 dataset$q7.electionB <- ifelse(dataset$Q75 == "Election B", 1, 0)
 
+
+  #Renaming variables
+  #Make a tibble
+
+dataset <- as_tibble(dataset)
+
   #Ratings
+dataset2 <- rename(dataset, q2.rating = Q67, q3.rating = Q71, q4.rating = Q70, q5.rating  = Q68, 
+                   q6.rating = Q73, q7.rating = Q76)
+  #Controls
 
-dataset$q2.rating <- 
+dataset2 <- rename(dataset2, gender = Q2, age = Q3, hispanic = Q4, race = Q5, income = Q6, ideology = Q7, work.status = Q15,
+                  party.id  = Q8, party.lean = Q11, strength.dem = Q9, strength.rep = Q10, interest.politics = Q12,
+                  activities.protest = Q38_1, activities.contact.official = Q38_2, activities.volunteer = Q38_3,
+                  activities.donate = Q38_4, activities.comment.online = Q38_5, activities.held.office = Q38_6, voted.2018 = Q14, influence.on.politics = Q18)
 
-
+#####
+ 
+  
+  
 test.model.a <- glm(q1.electionA~traits1a.party + traits1a.decisive + traits1a.type + traits1a.allegation, 
                   family=binomial(link="logit"), data=dataset[-1,])
 summary(test.model.a)
