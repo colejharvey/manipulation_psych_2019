@@ -227,13 +227,100 @@ dataset2 <- rename(dataset2, vignette.recall = Q35, dem.demonstration = Q45_1, d
 write.csv(dataset2, "~/Research projects/manipulation_psych_2019/dataset_updated.csv")
 
 #####
- 
+dataset <- read.csv("dataset_updated.csv") 
+dataset <- dataset %>% mutate(q1.choice.binary = if_else(q1.choice == "Election B", 1, 0))
   
   
-test.model.a <- glm(q1.electionA~traits1a.party + traits1a.decisive + traits1a.type + traits1a.allegation, 
-                  family=binomial(link="logit"), data=dataset[-1,])
+test.model.a <- glm(q1.electionA~traits1a.party + traits1a.decisive + traits1a.type + traits1a.allegation 
+                     #+ traits1b.party + traits1b.decisive + traits1b.type + traits1b.allegation
+                  ,family=binomial(link="logit"), data=dataset[-5,])
 summary(test.model.a)
 
-test.model.b <- glm(q1.electionB~traits1b.party + traits1b.decisive + traits1b.type + traits1b.allegation, 
-                    family=binomial(link="logit"), data=dataset[-1,])
+
+test.model.b <- glm(q1.electionB~traits1b.party + traits1b.decisive + traits1b.type + traits1b.allegation
+                    ,family=binomial(link="logit"), data=dataset[-5,])
 summary(test.model.b)
+
+
+####Disregard below except as examples
+
+dataset <- read.csv("dataset_updated.csv") 
+
+d.q1.party <- gather(dataset[-5,], "traits1a.party", "traits1b.party", key = "profile.party", value="party")
+d.q1.party <- d.q1.party %>% select("ResponseId", "party")
+
+d.q1.dec <- gather(dataset[-5,], 'traits1a.decisive', 'traits1b.decisive', key="profile.dec", value="decisiveness")
+d.q1.dec <- d.q1.dec %>% select("ResponseId", "decisiveness")
+
+d.q1.type <- gather(dataset[-5,], 'traits1a.type', 'traits1b.type', key="profile.type", value="type")
+d.q1.type <- d.q1.type %>% select("ResponseId", "type")
+
+d.q1.allegation <- gather(dataset[-5,], 'traits1a.allegation', 'traits1b.allegation', key="profile.allegation", value="allegation")
+d.q1.allegation <- d.q1.allegation %>% select("ResponseId", "allegation")
+
+q1.data <- left_join(d.q1.party, d.q1.dec, by="ResponseId")
+q1.data <- left_join(q1.data, d.q1.type, by="ResponseId")
+q1.data <- left_join(q1.data, d.q1.allegation, by="ResponseId")
+q1.data <- arrange(q1.data, ResponseId)
+
+###
+dataset <- read.csv("dataset_updated.csv") 
+
+d.q1.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q1.electionA", "q1.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q1.response <- arrange(d.q1.response, ResponseId)
+
+###Getting the traits
+d.q1.response <- inner_join(d.q1.response, dataset[-5,], by = "ResponseId")
+d.q1.response <- d.q1.response %>% filter(ResponseId != "Response ID")
+
+d.q1.response <- d.q1.response %>% mutate(party = ifelse(election.option=="q1.electionA", as.character(traits1a.party), as.character(traits1b.party)))
+d.q1.response <- d.q1.response %>% mutate(decisive = ifelse(election.option=="q1.electionA", as.character(traits1a.decisive), as.character(traits1b.decisive)))
+d.q1.response <- d.q1.response %>% mutate(type = ifelse(election.option=="q1.electionA", as.character(traits1a.type), as.character(traits1b.type)))
+d.q1.response <- d.q1.response %>% mutate(allegation = ifelse(election.option=="q1.electionA", as.character(traits1a.allegation), as.character(traits1b.allegation)))
+
+###Q2
+
+d.q2.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q2.electionA", "q2.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q2.response <- arrange(d.q2.response, ResponseId)
+
+d.q2.response <- inner_join(d.q2.response, dataset[-5,], by = "ResponseId")
+d.q2.response <- d.q2.response %>% filter(ResponseId != "Response ID")
+
+d.q2.response <- d.q2.response %>% mutate(party = ifelse(election.option=="q2.electionA", as.character(traits2a.party), as.character(traits2b.party)))
+d.q2.response <- d.q2.response %>% mutate(decisive = ifelse(election.option=="q2.electionA", as.character(traits2a.decisive), as.character(traits2b.decisive)))
+d.q2.response <- d.q2.response %>% mutate(type = ifelse(election.option=="q2.electionA", as.character(traits2a.type), as.character(traits2b.type)))
+d.q2.response <- d.q2.response %>% mutate(allegation = ifelse(election.option=="q2.electionA", as.character(traits2a.allegation), as.character(traits2b.allegation)))
+
+
+data.full <- rbind(d.q1.response, d.q2.response)
+
+
+###Q3
+
+d.q3.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q3.electionA", "q3.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q3.response <- arrange(d.q3.response, ResponseId)
+
+d.q3.response <- inner_join(d.q3.response, dataset[-5,], by = "ResponseId")
+d.q3.response <- d.q3.response %>% filter(ResponseId != "Response ID")
+
+d.q3.response <- d.q3.response %>% mutate(party = ifelse(election.option=="q3.electionA", as.character(traits3a.party), as.character(traits3b.party)))
+d.q3.response <- d.q3.response %>% mutate(decisive = ifelse(election.option=="q3.electionA", as.character(traits3a.decisive), as.character(traits3b.decisive)))
+d.q3.response <- d.q3.response %>% mutate(type = ifelse(election.option=="q3.electionA", as.character(traits3a.type), as.character(traits3b.type)))
+d.q3.response <- d.q3.response %>% mutate(allegation = ifelse(election.option=="q3.electionA", as.character(traits3a.allegation), as.character(traits3b.allegation)))
+
+
+data.full <- rbind(d.q1.response, d.q2.response, d.q3.response)
+
+
+
+test.model <- glm(response ~ as.factor(party) + as.factor(decisive) + as.factor(type) + 
+                    as.factor(allegation )
+                    ,family=binomial(link="logit"), data=data.full)
+summary(test.model)
+
