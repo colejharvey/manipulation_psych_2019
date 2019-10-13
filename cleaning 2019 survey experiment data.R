@@ -315,12 +315,136 @@ d.q3.response <- d.q3.response %>% mutate(type = ifelse(election.option=="q3.ele
 d.q3.response <- d.q3.response %>% mutate(allegation = ifelse(election.option=="q3.electionA", as.character(traits3a.allegation), as.character(traits3b.allegation)))
 
 
-data.full <- rbind(d.q1.response, d.q2.response, d.q3.response)
+###Q4
+
+d.q4.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q4.electionA", "q4.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q4.response <- arrange(d.q4.response, ResponseId)
+
+d.q4.response <- inner_join(d.q4.response, dataset[-5,], by = "ResponseId")
+d.q4.response <- d.q4.response %>% filter(ResponseId != "Response ID")
+
+d.q4.response <- d.q4.response %>% mutate(party = ifelse(election.option=="q4.electionA", as.character(traits4a.party), as.character(traits4b.party)))
+d.q4.response <- d.q4.response %>% mutate(decisive = ifelse(election.option=="q4.electionA", as.character(traits4a.decisive), as.character(traits4b.decisive)))
+d.q4.response <- d.q4.response %>% mutate(type = ifelse(election.option=="q4.electionA", as.character(traits4a.type), as.character(traits4b.type)))
+d.q4.response <- d.q4.response %>% mutate(allegation = ifelse(election.option=="q4.electionA", as.character(traits4a.allegation), as.character(traits4b.allegation)))
 
 
+###Q5
+d.q5.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q5.electionA", "q5.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q5.response <- arrange(d.q5.response, ResponseId)
+
+d.q5.response <- inner_join(d.q5.response, dataset[-5,], by = "ResponseId")
+d.q5.response <- d.q5.response %>% filter(ResponseId != "Response ID")
+
+d.q5.response <- d.q5.response %>% mutate(party = ifelse(election.option=="q5.electionA", as.character(traits5a.party), as.character(traits5b.party)))
+d.q5.response <- d.q5.response %>% mutate(decisive = ifelse(election.option=="q5.electionA", as.character(traits5a.decisive), as.character(traits5b.decisive)))
+d.q5.response <- d.q5.response %>% mutate(type = ifelse(election.option=="q5.electionA", as.character(traits5a.type), as.character(traits5b.type)))
+d.q5.response <- d.q5.response %>% mutate(allegation = ifelse(election.option=="q5.electionA", as.character(traits5a.allegation), as.character(traits5b.allegation)))
+
+
+###Q6
+d.q6.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q6.electionA", "q6.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q6.response <- arrange(d.q6.response, ResponseId)
+
+d.q6.response <- inner_join(d.q6.response, dataset[-5,], by = "ResponseId")
+d.q6.response <- d.q6.response %>% filter(ResponseId != "Response ID")
+
+d.q6.response <- d.q6.response %>% mutate(party = ifelse(election.option=="q6.electionA", as.character(traits6a.party), as.character(traits6b.party)))
+d.q6.response <- d.q6.response %>% mutate(decisive = ifelse(election.option=="q6.electionA", as.character(traits6a.decisive), as.character(traits6b.decisive)))
+d.q6.response <- d.q6.response %>% mutate(type = ifelse(election.option=="q6.electionA", as.character(traits6a.type), as.character(traits6b.type)))
+d.q6.response <- d.q6.response %>% mutate(allegation = ifelse(election.option=="q6.electionA", as.character(traits6a.allegation), as.character(traits6b.allegation)))
+
+
+###Q7
+d.q7.response <- melt(dataset[-5,], id.vars="ResponseId", 
+                      measure.vars = c("q7.electionA", "q7.electionB"),
+                      variable.name = "election.option", value.name = "response")
+d.q7.response <- arrange(d.q7.response, ResponseId)
+
+d.q7.response <- inner_join(d.q7.response, dataset[-5,], by = "ResponseId")
+d.q7.response <- d.q7.response %>% filter(ResponseId != "Response ID")
+
+d.q7.response <- d.q7.response %>% mutate(party = ifelse(election.option=="q7.electionA", as.character(traits7a.party), as.character(traits7b.party)))
+d.q7.response <- d.q7.response %>% mutate(decisive = ifelse(election.option=="q7.electionA", as.character(traits7a.decisive), as.character(traits7b.decisive)))
+d.q7.response <- d.q7.response %>% mutate(type = ifelse(election.option=="q7.electionA", as.character(traits7a.type), as.character(traits7b.type)))
+d.q7.response <- d.q7.response %>% mutate(allegation = ifelse(election.option=="q7.electionA", as.character(traits7a.allegation), as.character(traits7b.allegation)))
+
+
+
+data.full <- rbind(d.q1.response, d.q2.response, d.q3.response, d.q4.response, d.q5.response, 
+                   d.q6.response, d.q7.response)
+
+write.csv(data.full, "choice response data.csv")
 
 test.model <- glm(response ~ as.factor(party) + as.factor(decisive) + as.factor(type) + 
-                    as.factor(allegation )
+                    as.factor(allegation ) 
                     ,family=binomial(link="logit"), data=data.full)
 summary(test.model)
 
+
+
+###Protest response questions (5-7)
+
+data.protest.q5 <- melt(dataset, id.vars="ResponseId", 
+                     measure.vars = c("q5.rating", "q6.rating", "q7.rating"),
+                     variable.name = "protest.question", value.name = "response.protest")
+data.protest.q5 <- arrange(data.protest, ResponseId)
+
+
+data.elections.q5_7 <- data.full %>% filter(response == 1) %>% 
+  filter(election.option == "q5.electionA" | election.option == "q5.electionB"| 
+           election.option == "q6.electionA" | election.option == "q6.electionB" |
+           election.option == "q7.electionA" | election.option == "q7.electionB")
+
+data.elections.q5_7 <- data.elections.q5_7 %>% mutate(protest.response = ifelse(election.option == "q5.electionA" |
+                             election.option == "q5.electionB",
+                             q5.rating, ifelse(election.option == "q6.electionA" | election.option == "q6.electionB",
+                             q6.rating, q7.rating)))
+
+
+
+library(MASS)
+test.protest <- polr(as.factor(protest.response) ~ as.factor(party) + as.factor(decisive) + as.factor(type) + 
+                       as.factor(allegation), data = data.elections.q5_7)
+summary(test.protest)
+ctable <- coef(summary(test.protest))
+p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
+
+## combined table
+(ctable <- cbind(ctable, "p value" = p))
+#Can make plots using this code https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/
+
+
+###Test data for vignette type
+dataset.vignette <- dataset[-5,] %>% filter(ResponseId != "Response ID") 
+dataset.vignette <- dataset.vignette %>% mutate(dem.we.num = as.numeric(dem.we))
+dataset.vignette <- dataset.vignette %>% mutate(dem.imp.num = as.numeric(dem.important))
+dataset.vignette <- dataset.vignette %>% mutate(dem.desc.num = as.numeric(dem.describe))
+dataset.vignette <- dataset.vignette %>% mutate(dem.self.num = as.numeric(dem.self))
+dataset.vignette <- dataset.vignette %>% mutate(dem.id.index = dem.we.num + dem.imp.num + dem.desc.num + dem.self.num)
+
+
+dataset.vignette <- dataset.vignette %>% mutate(rep.we.num = as.numeric(rep.we))
+dataset.vignette <- dataset.vignette %>% mutate(rep.imp.num = as.numeric(rep.important))
+dataset.vignette <- dataset.vignette %>% mutate(rep.desc.num = as.numeric(rep.describe))
+dataset.vignette <- dataset.vignette %>% mutate(rep.self.num = as.numeric(rep.self))
+dataset.vignette <- dataset.vignette %>% mutate(rep.id.index = rep.we.num + rep.imp.num + rep.desc.num +rep.self.num)
+
+dataset.vignette <- dataset.vignette %>% mutate(party.id.index = dem.id.index + rep.id.index)
+
+dataset.vignette <- dataset.vignette %>% mutate(party.selfid = ifelse(party.id == "Independent",
+                                                                      party.lean, party.id))
+
+write.csv(dataset.vignette, "dataset_vignette.csv")
+
+
+model.test.id <- lm(dem.id.index ~ vignette.type + party.selfid, data=dataset.vignette)
+summary(model.test.id)
+
+###Next steps are to construct the indicies for the other DVs
